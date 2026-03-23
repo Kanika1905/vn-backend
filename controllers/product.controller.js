@@ -91,7 +91,7 @@ export const getProductById = async (req, res) => {
 export const updateProduct = async (req, res) => {
   try {
     const updatedProduct = await Product.findByIdAndUpdate(
-      req.params.id,
+      req.params.productId,
       req.body,
       { new: true, runValidators: true }
     );

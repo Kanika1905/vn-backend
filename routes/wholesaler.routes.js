@@ -28,6 +28,7 @@ import {
   deleteProduct,
   completeProfile,
   getWholesalerProfile,
+  updateProfile
 } from "../controllers/wholesaler.controller.js";
 
 import authMiddleware from "../middleware/auth.middleware.js";
@@ -37,6 +38,7 @@ const router = express.Router();
 // Profile
 router.put("/complete-profile", authMiddleware, completeProfile);
 router.get("/profile", authMiddleware, getWholesalerProfile);
+router.put("/update-profile", authMiddleware, updateProfile);
 
 // Products — all protected
 router.post("/products", authMiddleware, addProduct);

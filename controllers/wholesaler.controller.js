@@ -377,3 +377,57 @@ export const getWholesalerProfile = async (req, res) => {
     });
   }
 };
+
+// ── ADD THIS to your wholesaler.controller.js ──────────────────────────────
+
+// PUT /wholesaler/update-profile
+export const updateProfile = async (req, res) => {
+  try {
+    const wholesalerId = req.user.id; // from auth middleware
+
+    const { businessName, address } = req.body;
+
+    // Build update object with only provided fields
+    const updateFields = {};
+
+    if (businessName !== undefined && businessName.trim() !== "") {
+      updateFields.businessName = businessName.trim();
+    }
+
+    if (address) {
+      if (address.shopAddress !== undefined)
+        updateFields["address.shopAddress"] = address.shopAddress.trim();
+      if (address.city !== undefined)
+        updateFields["address.city"] = address.city.trim();
+      if (address.state !== undefined)
+        updateFields["address.state"] = address.state.trim();
+      if (address.pincode !== undefined)
+        updateFields["address.pincode"] = address.pincode.trim();
+    }
+
+    if (Object.keys(updateFields).length === 0) {
+      return res.status(400).json({ message: "No fields to update" });
+    }
+
+    const updated = await Wholesaler.findByIdAndUpdate(
+      wholesalerId,
+      { $set: updateFields },
+      { new: true, runValidators: true }
+    ).select("-password -otp");
+
+    if (!updated) {
+      return res.status(404).json({ message: "Wholesaler not found" });
+    }
+
+    return res.status(200).json({
+      message: "Profile updated successfully",
+      profile: updated,
+    });
+  } catch (error) {
+    console.error("UPDATE PROFILE ERROR:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+// ── ADD THIS ROUTE in your wholesaler.routes.js ─────────────────────────────
+// router.put("/update-profile", authMiddleware, updateProfile);
