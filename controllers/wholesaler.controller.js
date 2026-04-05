@@ -194,25 +194,27 @@ export const addProduct = async (req, res) => {
   try {
     const wholesalerId = req.user.id;
 
-    const { categoryId, name, image, description, price, quantity, unit } =
-      req.body;
+    const { categoryId, name, description, price, quantity, unit } = req.body; // ← removed `image`
 
     if (!categoryId || !name || !price || !quantity || !unit) {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
+    // Images uploaded via multer → Cloudinary
+    const images = (req.files || []).map((file) => file.path);
+
     const product = await Product.create({
       wholesalerId,
       categoryId,
       name,
-      image,
+      images,       // ← was `image` (single string), now array of Cloudinary URLs
       description,
       price,
       quantity,
       unit,
     });
 
-    res.status(201).json(product);
+    res.status(201).json({ success: true, product });
   } catch (error) {
     console.error("Add Product Error:", error);
     res.status(500).json({ message: "Failed to add product" });

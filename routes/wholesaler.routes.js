@@ -31,6 +31,8 @@ import {
   updateProfile
 } from "../controllers/wholesaler.controller.js";
 
+import { upload } from "../config/cloudinary.js"; 
+
 import authMiddleware from "../middleware/auth.middleware.js";
 
 const router = express.Router();
@@ -41,7 +43,7 @@ router.get("/profile", authMiddleware, getWholesalerProfile);
 router.put("/update-profile", authMiddleware, updateProfile);
 
 // Products — all protected
-router.post("/products", authMiddleware, addProduct);
+router.post("/products", authMiddleware, upload.array("images", 3), addProduct);
 router.get("/products", authMiddleware, getMyProducts);
 router.put("/products/:productId", authMiddleware, updateProduct);
 router.delete("/products/:productId", authMiddleware, deleteProduct);

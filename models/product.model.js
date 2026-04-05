@@ -40,6 +40,10 @@ const productSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    images: {
+      type: [String],   // array of Cloudinary URLs
+      default: [],
+    },
   },
   { timestamps: true }
 );
