@@ -1,3 +1,21 @@
+// import express from "express";
+// import {
+//   createProduct,
+//   getProducts,
+//   getProductById,
+//   updateProduct,
+//   deleteProduct,
+// } from "../controllers/product.controller.js";
+// import { upload } from "../config/cloudinary.js"; 
+// const router = express.Router();
+
+// router.post("/create", upload.array("images", 3), createProduct);
+// router.get("/", getProducts);
+// router.get("/:id", getProductById);
+// router.put("/:id", updateProduct);
+// router.delete("/:id", deleteProduct);
+
+// export default router;
 import express from "express";
 import {
   createProduct,
@@ -6,10 +24,11 @@ import {
   updateProduct,
   deleteProduct,
 } from "../controllers/product.controller.js";
-import { upload } from "../config/cloudinary.js"; 
+import { upload } from "../config/cloudinary.js"; // 👈 import upload
+
 const router = express.Router();
 
-router.post("/create", upload.array("images", 3), createProduct);
+router.post("/create", upload.array("images", 3), createProduct); // 👈 add upload middleware
 router.get("/", getProducts);
 router.get("/:id", getProductById);
 router.put("/:id", updateProduct);
