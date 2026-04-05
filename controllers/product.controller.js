@@ -52,7 +52,8 @@ export const createProduct = async (req, res) => {
 export const getProducts = async (req, res) => {
   try {
     const products = await Product.find()
-      .populate("categoryId");
+  .populate("wholesalerId", "businessName phone")  // 👈 add this
+  .populate("categoryId");
 
     return res.status(200).json({
       success: true,

@@ -4,6 +4,8 @@ import authRoutes from "./auth.routes.js";
 import categoryRoutes from "./category.routes.js";
 import productRoutes from "./product.routes.js";
 import wholesalerRoutes from "./wholesaler.routes.js";
+import vendorRoutes from "./vendor.routes.js";
+
 
 const router = express.Router();
 
@@ -19,4 +21,5 @@ router.use("/products", productRoutes);
 // Wholesaler specific APIs (profile + my products)
 router.use("/wholesaler", wholesalerRoutes);
 
+router.use("/vendor", vendorRoutes);
 export default router;
