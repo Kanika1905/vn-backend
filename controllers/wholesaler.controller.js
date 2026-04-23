@@ -21,7 +21,7 @@ export const addProduct = async (req, res) => {
 
     const product = await Product.create({
       wholesalerId,
-      categoryId: categoryId || null,
+      categoryId: categoryId,
       name,
       images,
       description,
@@ -41,10 +41,11 @@ export const addProduct = async (req, res) => {
 export const getMyProducts = async (req, res) => {
   try {
     const wholesalerId = req.user.id;
-    const products = await Product.find({ wholesalerId }).sort({ createdAt: -1 });
+    const products = await Product.find({ wholesalerId })
+      .populate("categoryId", "name")   // 👈 add this
+      .sort({ createdAt: -1 });
     return res.status(200).json(products);
   } catch (error) {
-    console.error("Fetch Products Error:", error);
     return res.status(500).json({ success: false, message: error.message });
   }
 };
@@ -59,7 +60,7 @@ export const updateMyProduct = async (req, res) => {
       { _id: productId, wholesalerId }, // ownership check
       req.body,
       { new: true, runValidators: true }
-    );
+    ).populate("categoryId", "name");   // 👈 populate category
 
     if (!product) {
       return res.status(404).json({ success: false, message: "Product not found" });
@@ -90,8 +91,8 @@ export const deleteMyProduct = async (req, res) => {
     // Clean up images from Cloudinary
     if (product.images?.length) {
       const deletePromises = product.images.map((url) => {
-        const parts    = url.split("/");
-        const file     = parts[parts.length - 1];
+        const parts = url.split("/");
+        const file = parts[parts.length - 1];
         const publicId = "wholesaler/products/" + file.split(".")[0];
         return cloudinary.uploader.destroy(publicId);
       });
@@ -130,10 +131,10 @@ export const completeProfile = async (req, res) => {
         $set: {
           businessName,
           "address.shopAddress": address.shopAddress,
-          "address.city":        address.city,
-          "address.state":       address.state,
-          "address.pincode":     address.pincode,
-          isProfileCompleted:    true,
+          "address.city": address.city,
+          "address.state": address.state,
+          "address.pincode": address.pincode,
+          isProfileCompleted: true,
         },
       },
       { new: true, runValidators: true }
@@ -185,9 +186,9 @@ export const updateProfile = async (req, res) => {
 
     if (address) {
       if (address.shopAddress !== undefined) updateFields["address.shopAddress"] = address.shopAddress.trim();
-      if (address.city        !== undefined) updateFields["address.city"]        = address.city.trim();
-      if (address.state       !== undefined) updateFields["address.state"]       = address.state.trim();
-      if (address.pincode     !== undefined) updateFields["address.pincode"]     = address.pincode.trim();
+      if (address.city !== undefined) updateFields["address.city"] = address.city.trim();
+      if (address.state !== undefined) updateFields["address.state"] = address.state.trim();
+      if (address.pincode !== undefined) updateFields["address.pincode"] = address.pincode.trim();
     }
 
     if (Object.keys(updateFields).length === 0) {
