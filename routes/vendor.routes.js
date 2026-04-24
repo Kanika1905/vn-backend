@@ -23,7 +23,7 @@ router.put("/profile", authMiddleware, updateProfile);
 // Products (protected)
 router.get("/products", authMiddleware, getProducts);
 
-// Orders (protected)
+
 router.post("/orders", authMiddleware, placeOrder);
 router.get("/orders", authMiddleware, getMyOrders);
 

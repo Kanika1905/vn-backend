@@ -1,7 +1,7 @@
 import Wholesaler from "../models/wholesaler.model.js";
 import { Product } from "../models/product.model.js";
 import cloudinary from "../config/cloudinary.js";
-
+import Order from "../models/order.model.js";
 /* ================================
    PRODUCTS (wholesaler-owned)
    All routes: /wholesaler/products
@@ -209,5 +209,50 @@ export const updateProfile = async (req, res) => {
   } catch (error) {
     console.error("UPDATE PROFILE ERROR:", error);
     return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+
+
+//=======================
+// controllers/wholesaler.controller.js
+
+// GET /api/wholesaler/orders  — wholesaler sees all incoming orders
+export const getIncomingOrders = async (req, res) => {
+  try {
+    const orders = await Order.find({ wholesaler: req.wholesaler.id })
+      .populate("product", "name price")
+      .populate("vendor", "businessName phone address")
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({ orders });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+// PUT /api/wholesaler/orders/:orderId/status  — wholesaler updates order status
+export const updateOrderStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+    const validStatuses = ["accepted", "out_for_delivery", "delivered", "cancelled"];
+
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ message: "Invalid status" });
+    }
+
+    const order = await Order.findOneAndUpdate(
+      { _id: req.params.orderId, wholesaler: req.wholesaler.id }, // ensure ownership
+      { status },
+      { new: true }
+    )
+      .populate("product", "name price")
+      .populate("vendor", "businessName phone address");
+
+    if (!order) return res.status(404).json({ message: "Order not found" });
+
+    res.status(200).json({ message: "Order status updated", order });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 };

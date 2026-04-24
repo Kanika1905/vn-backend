@@ -13,16 +13,23 @@ export const loginVendor = async (req, res) => {
   }
 
   try {
-    // Find vendor or create new one
     let vendor = await Vendor.findOne({ phone });
 
     if (!vendor) {
       vendor = await Vendor.create({ phone, isVerified: true });
     }
 
+    // Generate token
+    const token = jwt.sign(
+      { id: vendor._id },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
     return res.json({
       message: "Vendor login successful",
-      vendorId: vendor._id,
+      token,           // ← send token
+      vendor,          // ← send full vendor object
       isVerified: vendor.isVerified,
     });
   } catch (error) {

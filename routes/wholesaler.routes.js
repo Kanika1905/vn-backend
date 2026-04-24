@@ -38,6 +38,8 @@ import {
   completeProfile,
   getWholesalerProfile,
   updateProfile,
+  getIncomingOrders,
+  updateOrderStatus
 } from "../controllers/wholesaler.controller.js";
 import { upload } from "../config/cloudinary.js";
 import authMiddleware from "../middleware/auth.middleware.js";
@@ -55,4 +57,6 @@ router.get(   "/products",            authMiddleware, getMyProducts);
 router.put(   "/products/:productId", authMiddleware, updateMyProduct);
 router.delete("/products/:productId", authMiddleware, deleteMyProduct);
 
+router.get("/orders", authMiddleware, getIncomingOrders);
+router.put("/orders/:orderId/status", authMiddleware, updateOrderStatus);
 export default router;
