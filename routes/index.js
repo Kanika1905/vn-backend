@@ -22,5 +22,4 @@ router.use("/products", productRoutes);
 router.use("/wholesaler", wholesalerRoutes);
 
 router.use("/vendor", vendorRoutes);
-router.use("/categories", categoryRoutes);
 export default router;
