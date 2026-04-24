@@ -79,7 +79,7 @@ export const placeOrder = async (req, res) => {
     });
 
     await order.populate([
-      { path: "product", select: "name price" },
+      { path: "product", select: "name price images unit quantity" },
       { path: "wholesaler", select: "businessName phone" },
       { path: "vendor", select: "businessName phone address" },
     ]);
@@ -94,7 +94,7 @@ export const placeOrder = async (req, res) => {
 export const getMyOrders = async (req, res) => {
   try {
     const orders = await Order.find({ vendor: req.user.id }) // ✅
-      .populate("product", "name price")
+      .populate("product", "name price images unit quantity")
       .populate("wholesaler", "businessName phone")
       .sort({ createdAt: -1 });
     res.status(200).json({ orders });
