@@ -1,5 +1,5 @@
 import { Product } from "../models/product.model.js";
-
+import { Category } from "../models/category.model.js";
 /* ---------------------- CREATE PRODUCT ---------------------- */
 export const createProduct = async (req, res) => {
   try {
@@ -53,9 +53,17 @@ export const createProduct = async (req, res) => {
 /* ---------------------- GET ALL PRODUCTS ---------------------- */
 export const getProducts = async (req, res) => {
   try {
-    const products = await Product.find()
+    const filter = {};
+
+    if (req.query.category) {
+      const cat = await Category.findOne({ name: req.query.category });
+      if (cat) filter.categoryId = cat._id;
+    }
+
+    const products = await Product.find(filter)
       .populate("wholesalerId", "businessName phone")
-      .populate("categoryId");
+      .populate("categoryId", "name group emoji")
+      .sort({ createdAt: -1 });
 
     return res.status(200).json({
       success: true,
@@ -66,7 +74,6 @@ export const getProducts = async (req, res) => {
     return res.status(500).json({ success: false, message: error.message });
   }
 };
-
 /* ---------------------- GET PRODUCT BY ID ---------------------- */
 export const getProductById = async (req, res) => {
   try {
