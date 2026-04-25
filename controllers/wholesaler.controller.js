@@ -220,8 +220,8 @@ export const updateProfile = async (req, res) => {
 // GET /api/wholesaler/orders  — wholesaler sees all incoming orders
 export const getIncomingOrders = async (req, res) => {
   try {
-    const orders = await Order.find({ wholesaler: req.wholesaler.id })
-      .populate("product", "name price")
+    const orders = await Order.find({ wholesaler: req.user.id })
+      .populate("product", "name price images")
       .populate("vendor", "businessName phone address")
       .sort({ createdAt: -1 });
 
