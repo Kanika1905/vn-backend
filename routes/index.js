@@ -5,6 +5,7 @@ import categoryRoutes from "./category.routes.js";
 import productRoutes from "./product.routes.js";
 import wholesalerRoutes from "./wholesaler.routes.js";
 import vendorRoutes from "./vendor.routes.js";
+import paymentRoutes from "./payment.routes.js";
 
 
 const router = express.Router();
@@ -22,4 +23,8 @@ router.use("/products", productRoutes);
 router.use("/wholesaler", wholesalerRoutes);
 
 router.use("/vendor", vendorRoutes);
+
+// Payment APIs (Razorpay)
+router.use("/payment", paymentRoutes);
+
 export default router;

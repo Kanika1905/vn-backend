@@ -35,6 +35,13 @@ const orderSchema = new mongoose.Schema({
     enum: ["pending", "accepted", "out_for_delivery", "delivered", "cancelled"],
     default: "pending",
   },
+  paymentStatus: {
+    type: String,
+    enum: ["unpaid", "paid", "failed"],
+    default: "unpaid",
+  },
+  razorpayOrderId: { type: String },
+  razorpayPaymentId: { type: String },
 }, { timestamps: true });
 
 const Order = mongoose.model("Order", orderSchema);
