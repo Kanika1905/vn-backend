@@ -4,7 +4,7 @@ import { Category } from "../models/category.model.js";
 // -------------------- Create Category --------------------
 export const createCategory = async (req, res) => {
   try {
-    const { name, description, group, emoji } = req.body;
+    const { name, description, group, emoji, image } = req.body;
 
     if (!name) {
       return res.status(400).json({ message: "Category name is required" });
@@ -15,7 +15,7 @@ export const createCategory = async (req, res) => {
       return res.status(409).json({ message: "Category already exists" });
     }
 
-    const category = new Category({ name, description, group, emoji });
+    const category = new Category({ name, description, group, emoji, image });
     await category.save();
 
     res.status(201).json({ message: "Category created successfully", category });
@@ -38,11 +38,11 @@ export const getAllCategories = async (req, res) => {
 export const updateCategory = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description, group, emoji } = req.body;
+    const { name, description, group, emoji, image } = req.body;
 
     const updatedCategory = await Category.findByIdAndUpdate(
       id,
-      { name, description, group, emoji },
+      { name, description, group, emoji, image },
       { new: true, runValidators: true }
     );
 

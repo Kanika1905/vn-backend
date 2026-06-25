@@ -6,6 +6,7 @@ import productRoutes from "./product.routes.js";
 import wholesalerRoutes from "./wholesaler.routes.js";
 import vendorRoutes from "./vendor.routes.js";
 import paymentRoutes from "./payment.routes.js";
+import trackingRoutes from "./tracking.routes.js";
 
 
 const router = express.Router();
@@ -26,5 +27,8 @@ router.use("/vendor", vendorRoutes);
 
 // Payment APIs (Razorpay)
 router.use("/payment", paymentRoutes);
+
+// Live order tracking (driver location push + customer track)
+router.use("/orders", trackingRoutes);
 
 export default router;
