@@ -18,7 +18,7 @@ import OrderTracking from "../models/orderTracking.model.js";
 
 dotenv.config();
 
-const API_URL = process.env.API_URL || "http://localhost:5000/api";
+const API_URL = process.env.API_URL || "http://localhost:3000/api";
 const STEPS = 24;
 const INTERVAL_MS = 1500;
 const lerp = (a, b, t) => a + (b - a) * t;
